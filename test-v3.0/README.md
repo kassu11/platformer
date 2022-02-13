@@ -1,4 +1,4 @@
-# Testi v3
+# Testi v3.0
 - Voi liikkua wasd
 - Voi hyppiä ja on painovoima
 	- Voit hypätä vaan jos olet maassa
@@ -11,3 +11,4 @@
 ## Muutokset
 - Lisäsin polygon tuon muodoille
 	- Nytten vaan tarkistaa onko pelaaja sen sisälle, mutta tarkotus olis lisätä että ei voi mennä sisälle
+	- katoin koodi mallii täältä: https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/

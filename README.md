@@ -9,3 +9,5 @@
 - [Test v2.0](https://github.com/kassu11/platformer/tree/main/test-v2.0)
 - [Test v2.1](https://github.com/kassu11/platformer/tree/main/test-v2.1)
 - [Test v2.2](https://github.com/kassu11/platformer/tree/main/test-v2.2)
+- [Test v3.0](https://github.com/kassu11/platformer/tree/main/test-v3.0)
+- [Test v3.1](https://github.com/kassu11/platformer/tree/main/test-v3.1)

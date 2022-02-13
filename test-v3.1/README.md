@@ -1,4 +1,4 @@
-# Testi v3
+# Testi v3.1
 - Voi liikkua wasd
 - Voi hyppiä ja on painovoima
 	- Voit hypätä vaan jos olet maassa
@@ -9,5 +9,4 @@
 - Polygon muoto vaan testaa onko pelaaja sen sisällä
 
 ## Muutokset
-- Lisäsin polygon tuon muodoille
-	- Nytten vaan tarkistaa onko pelaaja sen sisälle, mutta tarkotus olis lisätä että ei voi mennä sisälle
+- Stressi testi 300 polygon objectia

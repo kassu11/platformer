@@ -30,10 +30,16 @@ const shapes = [
 	{x: -800, y: 850, w: 200, h: 50},
 	{x: -800, y: 650, w: 50, h: 200},
 	{x: -800, y: 550, w: 100, h: 50},
-	{polygon: [[300, 50], [400, 400], [200, 700], [-100, 800]]},
-	{polygon: [[900, 400], [800, 500], [700, 550]]},
-	{polygon: [[500, 260], [520, 270], [500, 280]]},
 ];
+
+shapes.push(...[...Array(300)].map(_ => {
+	const startX = random(-2000, 2000);
+	const startY = random(-2000, 2000);
+	
+	return {polygon: [...Array(random(3, 5))].map(_ => {
+		return [startX + random(-200, 200), startY + random(-200, 200)];
+	})}
+}))
 
 function render() {
 	canvas.width = innerWidth;
@@ -84,7 +90,6 @@ function movePlayer() {
 
 	shapes.forEach(row => {
 		if(row.polygon) {
-
 			return
 		};
 		if(player.x < (row.x + row.w) && (player.x + player.w) > row.x && newY < (row.y + row.h) && (player.h + newY) > row.y) {
@@ -129,6 +134,10 @@ window.addEventListener("keyup", e => {
 		player.movementRight = 0;
 	}
 })
+
+function random(a = 0, b = 1) {
+	return Math.round(Math.random() * (a - b) + b);
+}
 
 render();
 
