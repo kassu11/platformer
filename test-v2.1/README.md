@@ -5,6 +5,8 @@
 - Kamera seuraa pelaajaa loputtomasti
 - Tulee tasojen hitboxeja
 	- Voi olla mikä x, y tai w ja h
+- Taso on satunnaisesti generoitu
+	- Tää oli vaan stressi testi
 
 ## Muutokset
 - Stressi testasin 10 000 satunnaisesti generoidulla alustalla

@@ -1,4 +1,4 @@
-# Testi v2.2
+# Testi v3
 - Voi liikkua wasd
 - Voi hyppiä ja on painovoima
 	- Voit hypätä vaan jos olet maassa
@@ -6,8 +6,8 @@
 - Kamera seuraa pelaajaa loputtomasti
 - Tulee tasojen hitboxeja
 	- Voi olla mikä x, y tai w ja h
+- Polygon muoto vaan testaa onko pelaaja sen sisällä
 
 ## Muutokset
-- Muutettu versio 2.0, ainoa muutos on tupla hyppy
-	- Voit kirjottaa pelaaja objectiin monta extra hyppyy on
-- Lisäsin että pelaaja voi hypätä 70ms sen jälkeen kun lähtee alustalta
+- Lisäsin polygon tuon muodoille
+	- Nytten vaan tarkistaa onko pelaaja sen sisälle, mutta tarkotus olis lisätä että ei voi mennä sisälle
