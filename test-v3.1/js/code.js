@@ -30,6 +30,9 @@ const shapes = [
 	{x: -800, y: 850, w: 200, h: 50},
 	{x: -800, y: 650, w: 50, h: 200},
 	{x: -800, y: 550, w: 100, h: 50},
+	{polygon: [[300, 50], [400, 400], [200, 700], [-100, 800]]},
+	{polygon: [[900, 400], [800, 500], [700, 550]]},
+	{polygon: [[500, 260], [520, 270], [500, 280]]},
 ];
 
 shapes.push(...[...Array(300)].map(_ => {
@@ -94,9 +97,12 @@ function movePlayer() {
 		};
 		if(player.x < (row.x + row.w) && (player.x + player.w) > row.x && newY < (row.y + row.h) && (player.h + newY) > row.y) {
 			if(player.y < row.y) {
-				if(hitY == null || Math.abs(hitY - player.y) > Math.abs(row.y - player.h - player.y)) hitY = row.y - player.h;
+				if(hitY == null || Math.abs(hitY - player.y) > Math.abs(row.y - player.h - player.y)) {
+					hitY = row.y - player.h;
+					Object.assign(player, {onGround: true, jump: player.extraJumps, lastOnGround: performance.now()});
+				}
 			} else if(hitY == null || Math.abs(hitY - player.y) > Math.abs(row.y + row.h - player.y)) hitY = row.y + row.h;
-			Object.assign(player, {onGround: true, movementBottom: 0, jump: player.extraJumps, lastOnGround: performance.now()});
+			player.movementBottom = 0;
 			törmäysY = true;
 		} else if(newX < (row.x + row.w) && (newX + player.w) > row.x && player.y < (row.y + row.h) && (player.h + player.y) > row.y) {
 			if(player.x < row.x) {
@@ -156,10 +162,12 @@ function pointInsidePolygon(point, polygon) {
 function playerInsidePolygon(polygon) {
 	const playerP = [
 		[player.x, player.y], 
-		[player.x + player.w, player.y], 
 		[player.x, player.y + player.h], 
-		[player.x + player.w, player.y + player.h]
+		[player.x + player.w, player.y + player.h],
+		[player.x + player.w, player.y], 
 	];
+
+	if(pointInsidePolygon(polygon[0], playerP) || pointInsidePolygon([player.x, player.y], polygon)) return true
 
 	for(let i = 0; i < playerP.length; i++) {
 		const a = playerP.at(i);
@@ -170,12 +178,7 @@ function playerInsidePolygon(polygon) {
 
 			if(doIntersect({x: a[0], y:a[1]},{x: b[0], y:b[1]}, {x: c[0], y:c[1]}, {x: d[0], y:d[1]})) return true;
 		}
-	};
-
-	return pointInsidePolygon([player.x, player.y], polygon) ||
-	pointInsidePolygon([player.x + player.w, player.y], polygon) ||
-	pointInsidePolygon([player.x, player.y + player.h], polygon) ||
-	pointInsidePolygon([player.x + player.w, player.y + player.h], polygon);
+	}; return false;
 }
 
 function onSegment(p, q, r) {

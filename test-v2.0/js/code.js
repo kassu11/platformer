@@ -68,11 +68,13 @@ function movePlayer() {
 	shapes.forEach(row => {
 		if(player.x < (row.x + row.w) && (player.x + player.w) > row.x && newY < (row.y + row.h) && (player.h + newY) > row.y) {
 			if(player.y < row.y) {
-				if(hitY == null || Math.abs(hitY - player.y) > Math.abs(row.y - player.h - player.y)) hitY = row.y - player.h;
+				if(hitY == null || Math.abs(hitY - player.y) > Math.abs(row.y - player.h - player.y)) {
+					hitY = row.y - player.h;
+					player.onGround = true;
+				}
 			} else if(hitY == null || Math.abs(hitY - player.y) > Math.abs(row.y + row.h - player.y)) hitY = row.y + row.h;
-			törmäysY = true;
-			player.onGround = true;
 			player.movementBottom = 0;
+			törmäysY = true;
 		} else if(newX < (row.x + row.w) && (newX + player.w) > row.x && player.y < (row.y + row.h) && (player.h + player.y) > row.y) {
 			if(player.x < row.x) {
 				if(hitX == null || Math.abs(hitX - player.x) > Math.abs(row.x - player.w - player.x)) hitX = row.x - player.w

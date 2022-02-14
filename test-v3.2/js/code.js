@@ -9,7 +9,7 @@ const player = {
 	movementLeft: 0,
 	movementRight: 0,
 	movementBottom: 0,
-	extraJumps: 1,
+	extraJumps: Infinity,
 	jump: 0,
 	lastOnGround: 0,
 }
@@ -35,6 +35,24 @@ const shapes = [
 	{polygon: [[500, 260], [520, 270], [500, 280]]},
 ];
 
+shapes.push(...[...Array(50000)].map(_ => {
+	const startX = random(-20000, 20000);
+	const startY = random(-20000, 20000);
+	
+	return {polygon: [...Array(random(3, 4))].map(_ => {
+		return [startX + random(-200, 200), startY + random(-200, 200)];
+	})}
+}));
+
+shapes.forEach(row => {
+	row.polygon?.forEach(([x, y]) => {
+		if(row.minX > x || row.minX == null) row.minX = x;
+		if(row.maxX < x || row.maxX == null) row.maxX = x;
+		if(row.minY > y || row.minY == null) row.minY = y;
+		if(row.maxY < y || row.maxY == null) row.maxY = y;
+	});
+});
+
 function render() {
 	canvas.width = innerWidth;
 	canvas.height = innerHeight;
@@ -48,10 +66,16 @@ function render() {
 	
 	ctx.fillRect(plXOffset, plYOffset, player.w, player.h);
 
+	// console.log(plYOffset)
+
 	ctx.fillStyle = "black";
 	shapes.forEach(row => {
 		if(row.polygon) {
-			ctx.fillStyle = playerInsidePolygon(row.polygon) ? "green" : "blue";
+			if(row.maxX < player.x - plXOffset) return false;
+			if(row.minX > player.x + player.w + plXOffset) return false;
+			if(row.maxY < player.y - plYOffset) return false;
+			if(row.minY > player.y + player.h + plYOffset) return false;
+			ctx.fillStyle = playerInsidePolygon(row) ? "green" : "blue";
 			ctx.beginPath();
 			row.polygon.forEach(([x, y], i) => {
 				// if(i === 0) ctx.moveTo(x - player.x + plXOffset, y - player.y + plYOffset)
@@ -84,7 +108,6 @@ function movePlayer() {
 
 	shapes.forEach(row => {
 		if(row.polygon) {
-
 			return
 		};
 		if(player.x < (row.x + row.w) && (player.x + player.w) > row.x && newY < (row.y + row.h) && (player.h + newY) > row.y) {
@@ -115,9 +138,9 @@ function movePlayer() {
 
 window.addEventListener("keydown", e => {
 	if(e.code === "KeyD") {
-		player.movementLeft = 2;
+		player.movementLeft = 4;
 	} else if(e.code === "KeyA") {
-		player.movementRight = -2;
+		player.movementRight = -4;
 	} else if(e.code === "KeyW" || e.code === "Space") {
 		if(player.onGround) player.movementBottom = -10;
 		else if(player.jump-- > 0) player.movementBottom = -10;
@@ -133,6 +156,10 @@ window.addEventListener("keyup", e => {
 	}
 })
 
+function random(a = 0, b = 1) {
+	return Math.round(Math.random() * (a - b) + b);
+}
+
 render();
 
 function pointInsidePolygon(point, polygon) {
@@ -147,7 +174,13 @@ function pointInsidePolygon(point, polygon) {
 	} return count % 2 !== 0;
 }
 
-function playerInsidePolygon(polygon) {
+function playerInsidePolygon(shape) {
+	if(shape.maxX < player.x) return false;
+	if(shape.minX > player.x + player.w) return false;
+	if(shape.maxY < player.y) return false;
+	if(shape.minY > player.y + player.h) return false;
+	
+	const {polygon} = shape;
 	const playerP = [
 		[player.x, player.y], 
 		[player.x, player.y + player.h], 
@@ -163,9 +196,10 @@ function playerInsidePolygon(polygon) {
 		for(let j = 0; j < polygon.length; j++) {
 			const c = polygon.at(j);
 			const d = polygon.at(j-1);
-			if(doIntersect({x: a[0], y:a[1]},{x: b[0], y:b[1]}, {x: c[0], y:c[1]}, {x: d[0], y:d[1]})) return true;
+
+			if(doIntersect({x: a[0], y:a[1]}, {x: b[0], y:b[1]}, {x: c[0], y:c[1]}, {x: d[0], y:d[1]})) return true;
 		}
-	}; return false
+	}; return false;
 }
 
 function onSegment(p, q, r) {

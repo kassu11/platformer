@@ -71,9 +71,12 @@ function movePlayer() {
 	shapes.forEach(row => {
 		if(player.x < (row.x + row.w) && (player.x + player.w) > row.x && newY < (row.y + row.h) && (player.h + newY) > row.y) {
 			if(player.y < row.y) {
-				if(hitY == null || Math.abs(hitY - player.y) > Math.abs(row.y - player.h - player.y)) hitY = row.y - player.h;
+				if(hitY == null || Math.abs(hitY - player.y) > Math.abs(row.y - player.h - player.y)) {
+					hitY = row.y - player.h;
+					Object.assign(player, {onGround: true, jump: player.extraJumps, lastOnGround: performance.now()});
+				}
 			} else if(hitY == null || Math.abs(hitY - player.y) > Math.abs(row.y + row.h - player.y)) hitY = row.y + row.h;
-			Object.assign(player, {onGround: true, movementBottom: 0, jump: player.extraJumps, lastOnGround: performance.now()});
+			player.movementBottom = 0;
 			törmäysY = true;
 		} else if(newX < (row.x + row.w) && (newX + player.w) > row.x && player.y < (row.y + row.h) && (player.h + player.y) > row.y) {
 			if(player.x < row.x) {

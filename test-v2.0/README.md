@@ -1,9 +1,9 @@
 # Testi v2.0
 - Voi liikkua wasd
-- Voi hyppiä ja on painovoima
+- Voi hyppiä ja maailmassa on painovoima
 	- Voit hypätä vaan jos olet maassa
 - Kamera seuraa pelaajaa loputtomasti
-- Tulee tasojen hitboxeja
+- Tukee tasojen hitboxeja
 	- Voi olla mikä x, y tai w ja h
 
 ## Muutokset
