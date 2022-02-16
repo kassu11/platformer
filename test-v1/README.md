@@ -4,3 +4,9 @@
 - Voit hypätä myös ilmassa
 - Et voi liikkua näytöstä ulos
 	- Paitsi ei ole kattoa :D
+
+## Linkit
+
+- [Testaa projektia selaimessa](https://kassu11.github.io/platformer/test-v1/)
+- `Seuraava:` test-v2.0 [dokumentaatio](https://github.com/kassu11/platformer/tree/main/test-v2.0) ja [pelattava demo](https://kassu11.github.io/platformer/test-v2.0/)!
+- > [Muut versiot](https://github.com/kassu11/platformer#readme)
