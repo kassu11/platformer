@@ -12,6 +12,7 @@ const player = {
 	extraJumps: Infinity,
 	jump: 0,
 	lastOnGround: 0,
+	gravity: 15.8
 }
 
 const shapes = [
@@ -30,10 +31,11 @@ const shapes = [
 	{x: -800, y: 850, w: 200, h: 50},
 	{x: -800, y: 650, w: 50, h: 200},
 	{x: -800, y: 550, w: 100, h: 50},
+	// {x: 250, y: 300, w: 50, h: 300},
 	{polygon: [[300, 600], [300, 300], [0, 600]]},
 	{polygon: [[1000, 0], [1000, -200], [0, 0]]},
 	{polygon: [[1000, 0], [1000, -600], [500, 0]]},
-	{polygon: [[1000, 0], [1000, -600], [2000, -5000]]},
+	{polygon: [[1000, 0], [1000, -600], [2000, 0]]},
 	// {polygon: [[900, 400], [800, 500], [700, 550]]},
 	// {polygon: [[400, 260], [420, 270], [400, 280]]},
 ];
@@ -95,7 +97,7 @@ function render() {
 }
 
 function movePlayer() {
-	if(player.movementBottom >= 15.8) player.movementBottom = 15.8;
+	if(player.movementBottom >= player.gravity) player.movementBottom = player.gravity;
 	else player.movementBottom += .2;
 
 	const newX = player.x + (player.movementLeft + player.movementRight);
@@ -109,11 +111,28 @@ function movePlayer() {
 	let hitX = null;
 	let hitY = null;
 
-	let polygo = 0;
-
 	shapes.forEach(row => {
 		if(row.polygon && playerInsidePolygon(row, newX, newY)) {
-			polygo++;
+			let tiedot = {}
+
+			if(player.x - newX <= 0) {
+				const [v1, v2] = [closestLineToPointTop([newX + player.w, player.y + player.h], row.polygon), closestLineToPointTop([player.x + player.w, player.y + player.h], row.polygon)];
+				tiedot = v1.y > v2.y ? v2 : v1;
+			} else {
+				const [v1, v2] = [closestLineToPointTop([newX, player.y + player.h], row.polygon), closestLineToPointTop([player.x, player.y + player.h], row.polygon)];
+				tiedot = v1.y > v2.y ? v2 : v1;
+			}
+
+			if(Math.abs(tiedot.kulma) > 1) {
+				hitY = player.y;
+				const [v1, v2] = [closestLineToPointLeft([newX + player.w, player.y + player.h], row.polygon), closestLineToPointLeft([player.x + player.w, player.y + player.h], row.polygon)];
+				hitX = Math.max(v1, v2)
+				törmäysX = true;
+			} else {
+				console.log(tiedot)
+				hitY = tiedot.y;
+				player.movementBottom = 0;
+			}
 			// if(playerInsidePolygon(row, player.x, newY)) {
 			// 	törmäysY = true;
 			// 	hitY = player.y;
@@ -121,34 +140,12 @@ function movePlayer() {
 			// 	törmäysX = true;
 			// 	hitX = player.x;
 			// }
-			const kulmaA = closestLineSlopeAngle([newX + player.w, player.y + player.h], row.polygon);
-			const kulmaB = closestLineSlopeAngle([player.x + player.w, player.y + player.h], row.polygon);
-			const kulmaC = closestLineSlopeAngle([newX + player.w, newY + player.h], row.polygon);
-			const kulmaD = closestLineSlopeAngle([player.x + player.w, newY + player.h], row.polygon);
-
-			// console.log(kulmaB, kulmaA)
-
-			if(kulmaA < -1 || kulmaB < -1 || kulmaC < -1 || kulmaD < -1) {
-				console.log(kulmaA, kulmaB)
-				const newClosest = closestXCollision([player.x + player.w, player.y + player.h], row.polygon);
-				const oldClosest = closestXCollision([player.x + player.w, newY + player.h], row.polygon);
-				törmäysX = true;
-				// player.movementBottom = 0;
-				const minHitX = Math.min(newClosest, oldClosest);
-				if(hitX == null || Math.abs(player.x - hitX) < Math.abs(player.x - minHitX)) hitX = minHitX;
-			} else {
-				console.log("stop",kulmaA, kulmaB)
-				const newClosest = closestLineToPoint([newX + player.w, player.y + player.h], row.polygon);
-				const oldClosest = closestLineToPoint([player.x + player.w, player.y + player.h], row.polygon);
-				törmäysY = true;
-				player.movementBottom = 0;
-				hitY = Math.min(newClosest, oldClosest);
-			}
-
-
+			// player.movementBottom = 0;
+			törmäysY = true;
+			
 			return
-		}
-		else if(player.x < (row.x + row.w) && (player.x + player.w) > row.x && newY < (row.y + row.h) && (player.h + newY) > row.y) {
+		};
+		if(player.x < (row.x + row.w) && (player.x + player.w) > row.x && newY < (row.y + row.h) && (player.h + newY) > row.y) {
 			if(player.y < row.y) {
 				if(hitY == null || Math.abs(hitY - player.y) > Math.abs(row.y - player.h - player.y)) {
 					hitY = row.y - player.h;
@@ -164,8 +161,6 @@ function movePlayer() {
 			törmäysX = true;
 		}
 	});
-
-	// console.log(polygo)
 	
 	if(!törmäysX) player.x += (player.movementLeft + player.movementRight);
 	else player.x = hitX;
@@ -216,11 +211,11 @@ function pointInsidePolygon(point, polygon) {
 	} return count % 2 !== 0;
 }
 
-function closestLineToPoint(point, polygon) {
+function closestLineToPointTop(point, polygon) {
 	const length = polygon.length;
 	const [x, y] = point;
-	let count = 0;
 	let minTop = null;
+	let kulma = 2;
 
 	for(let i = 0; i < length; i++) {
 		const [x1, y1] = polygon.at(i);
@@ -240,71 +235,6 @@ function closestLineToPoint(point, polygon) {
 		// 	console.log((y2-y1) * (x-x1) / (x2-x1) + y1 - y)
 		// 	console.log("##########################################")
 		// }
-
-		if((x <= x1 != x <= x2 || (x == x1 && x1 == x2)) && y > (y2-y1) * (x-x1) / (x2-x1) + y1) { // up?
-			const top = (y2-y1) * (x-x1) / (x2-x1) + y1 - y;
-			if(minTop == null || minTop < top) minTop = top;
-			// console.log("??")
-			// console.log(x, (x2-x1))
-			// console.log(x, (x2-x1) * (y-y1))
-			// console.log(x, (x2-x1) * (y-y1) / (y2-y1))
-			// console.log(((y2-y1) * (x-x1) / (x2-x1) + y1 - y) * -1)
-			// console.log("##########################################")
-		}
-	} 
-	// console.log(player.y + minTop + player.h + 100)
-	return player.y + minTop;
-}
-
-
-function closestXCollision(point, polygon) {
-	const length = polygon.length;
-	const [x, y] = point;
-	let count = 0;
-	let minLeft = null;
-
-	for(let i = 0; i < length; i++) {
-		const [x1, y1] = polygon.at(i);
-		const [x2, y2] = polygon.at(i-1);
-		// if(y < y1 != y < y2 && x < (x2-x1) * (y-y1) / (y2-y1) + x1) { // Left
-		// 	// console.log(x, (x2-x1))
-		// 	// console.log(x, (x2-x1) * (y-y1))
-		// 	// console.log(x, (x2-x1) * (y-y1) / (y2-y1))
-		// 	console.log((x2-x1) * (y-y1) / (y2-y1) + x1 - x)
-		// 	console.log("##########################################")
-		// }
-
-		// if(x < x1 != x < x2 && y < (y2-y1) * (x-x1) / (x2-x1) + y1) { // Down
-		// 	// console.log(x, (x2-x1))
-		// 	// console.log(x, (x2-x1) * (y-y1))
-		// 	// console.log(x, (x2-x1) * (y-y1) / (y2-y1))
-		// 	console.log((y2-y1) * (x-x1) / (x2-x1) + y1 - y)
-		// 	console.log("##########################################")
-		// }
-
-		if(y < y1 != y < y2 && x > (x2-x1) * (y-y1) / (y2-y1) + x1) { // Left
-			// console.log(x, (x2-x1))
-			// console.log(x, (y-y1))
-			// console.log(x, (x2-x1) * (y-y1) / (y2-y1))
-			// console.log(x, (x2-x1) * (y-y1) / (y2-y1) + x1)
-			// console.log((x2-x1) * (y-y1) / (y2-y1) + x1 - x)
-			const left = (x2-x1) * (y-y1) / (y2-y1) + x1 - x;
-			if(minLeft == null || minLeft < left) minLeft = left;
-			// console.log("##########################################")
-		}
-	} 
-	// console.log(player.y + minTop + player.h + 100)
-	return player.x + minLeft;
-}
-function closestLineSlopeAngle(point, polygon) {
-	const length = polygon.length;
-	const [x, y] = point;
-	let minTop = null;
-	let kulma = 1;
-
-	for(let i = 0; i < length; i++) {
-		const [x1, y1] = polygon.at(i);
-		const [x2, y2] = polygon.at(i-1);
 
 		if(x <= x1 != x <= x2 && y > (y2-y1) * (x-x1) / (x2-x1) + y1) { // up?
 			const top = (y2-y1) * (x-x1) / (x2-x1) + y1 - y;
@@ -323,7 +253,57 @@ function closestLineSlopeAngle(point, polygon) {
 		}
 	} 
 	// console.log(player.y + minTop + player.h + 100)
-	return kulma;
+	return {y: player.y + minTop, kulma}
+}
+
+function closestLineToPointLeft(point, polygon) {
+	const length = polygon.length;
+	const [x, y] = point;
+	let count = 0;
+	let minLeft = null;
+
+	for(let i = 0; i < length; i++) {
+		const [x1, y1] = polygon.at(i);
+		const [x2, y2] = polygon.at(i-1);
+		// if(y < y1 != y < y2 && x < (x2-x1) * (y-y1) / (y2-y1) + x1) { // Right
+		// 	// console.log(x, (x2-x1))
+		// 	// console.log(x, (x2-x1) * (y-y1))
+		// 	// console.log(x, (x2-x1) * (y-y1) / (y2-y1))
+		// 	console.log((x2-x1) * (y-y1) / (y2-y1) + x1 - x)
+		// 	console.log("##########################################")
+		// }
+		if(y < y1 != y < y2 && x > (x2-x1) * (y-y1) / (y2-y1) + x1) { // Left
+			console.log(x, (x2-x1))
+			console.log(x, (y-y1))
+			console.log(x, (x2-x1) * (y-y1) / (y2-y1))
+			console.log(x, (x2-x1) * (y-y1) / (y2-y1) + x1)
+			console.log((x2-x1) * (y-y1) / (y2-y1) + x1 - x)
+			const left = (x2-x1) * (y-y1) / (y2-y1) + x1 - x;
+			if(minLeft == null || minLeft < left) minLeft = left;
+			console.log("##########################################")
+		}
+
+		// if(x < x1 != x < x2 && y < (y2-y1) * (x-x1) / (x2-x1) + y1) { // Down
+		// 	// console.log(x, (x2-x1))
+		// 	// console.log(x, (x2-x1) * (y-y1))
+		// 	// console.log(x, (x2-x1) * (y-y1) / (y2-y1))
+		// 	console.log((y2-y1) * (x-x1) / (x2-x1) + y1 - y)
+		// 	console.log("##########################################")
+		// }
+
+		// if((x <= x1 != x <= x2 || (x == x1 && x1 == x2)) && y > (y2-y1) * (x-x1) / (x2-x1) + y1) { // up?
+		// 	const top = (y2-y1) * (x-x1) / (x2-x1) + y1 - y;
+		// 	if(minTop == null || minTop < top) minTop = top;
+		// 	// console.log("??")
+		// 	// console.log(x, (x2-x1))
+		// 	// console.log(x, (x2-x1) * (y-y1))
+		// 	// console.log(x, (x2-x1) * (y-y1) / (y2-y1))
+		// 	// console.log(((y2-y1) * (x-x1) / (x2-x1) + y1 - y) * -1)
+		// 	// console.log("##########################################")
+		// }
+	} 
+	// console.log(player.y + minTop + player.h + 100)
+	return player.x + minLeft;
 }
 
 function playerInsidePolygon(shape, plX = player.x, plY = player.y) {

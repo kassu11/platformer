@@ -6,7 +6,6 @@
 - Tukee nelikulmio tasoja, joissa on hitboxit
 	- Voi olla mikä x, y tai w ja h
 - Oikealle menevät nousut toimivat tässä
-	- Ei tarkista miten jyrkkä kulma on
 	- Ne kyllä hajoo jos niihin menee mistään muusta suunnasta :D
 
 ## Muutokset
