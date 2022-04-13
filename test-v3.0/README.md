@@ -16,6 +16,6 @@
 ## Linkit
 
 - [Testaa projektia selaimessa](https://kassu11.github.io/platformer/test-v3.0/)
-- `Edellinen:` test-v2.2 [dokumentaatio](https://github.com/kassu11/platformer/tree/main/test-v2.2) ja [pelattava demo](https://kassu11.github.io/platformer/test-v2.2/)!
-- `Seuraava:` test-v3.1 [dokumentaatio](https://github.com/kassu11/platformer/tree/main/test-v3.1) ja [pelattava demo](https://kassu11.github.io/platformer/test-v3.1/)!
-- > [Muut versiot](https://github.com/kassu11/platformer#readme)
+- `Edellinen:` test-v2.2 [dokumentaatio](https://github.com/kassu11/platformer/tree/main/test-v2.2#readme) ja [pelattava demo](https://kassu11.github.io/platformer/test-v2.2/)!
+- `Seuraava:` test-v3.1 [dokumentaatio](https://github.com/kassu11/platformer/tree/main/test-v3.1#readme) ja [pelattava demo](https://kassu11.github.io/platformer/test-v3.1/)!
+- `Koti:` näytä [kaikki versiot](https://github.com/kassu11/platformer#readme)

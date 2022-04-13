@@ -1,18 +1,17 @@
-# Testi v3.2
+# Testi v4.0
 - Voi liikkua wasd
 - Voi hyppiä ja maailmassa on painovoima
 	- Tässä demossa on loputtomat hypyt
 - Kamera seuraa pelaajaa loputtomasti
 - Tukee nelikulmio tasoja, joissa on hitboxit
 	- Voi olla mikä x, y tai w ja h
-- Polygon muoto vaan testaa onko pelaaja sen sisällä
+- Oikealle menevät nousut toimivat tässä
+	- Ei tarkista miten jyrkkä kulma on
+	- Ne kyllä hajoo jos niihin menee mistään muusta suunnasta :D
 
 ## Muutokset
-- Optimoin miten polygon objektien hitbox lasketaan
-- Muutin myös niitten renderöintiä
-	- Jos ei ole näytöllä niitä ei tarvitse piirtää
-	- Muutosten ansiosta, tämä demo tukee 50 000 polygon objectia
-	- Eli nytten on ladattu 50k objectia näytölle :D
+
+- Lisäsin hitboxin polygon elementtiin
 
 ## Linkit
 
