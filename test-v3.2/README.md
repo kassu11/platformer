@@ -18,4 +18,5 @@
 
 - [Testaa projektia selaimessa](https://kassu11.github.io/platformer/test-v3.2/)
 - `Edellinen:` test-v3.1 [dokumentaatio](https://github.com/kassu11/platformer/tree/main/test-v3.1#readme) ja [pelattava demo](https://kassu11.github.io/platformer/test-v3.1/)!
+- `Seuraava:` test-v4.0 [dokumentaatio](https://github.com/kassu11/platformer/tree/main/test-v4.0#readme) ja [pelattava demo](https://kassu11.github.io/platformer/test-v4.0/)!
 - `Koti:` näytä [kaikki versiot](https://github.com/kassu11/platformer#readme)

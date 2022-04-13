@@ -14,3 +14,5 @@
 - `Test v3.0` version [dokumentaatio](https://github.com/kassu11/platformer/tree/main/test-v3.0#readme) ja [pelattava demo](https://kassu11.github.io/platformer/test-v3.0)!
 - `Test v3.1` version [dokumentaatio](https://github.com/kassu11/platformer/tree/main/test-v3.1#readme) ja [pelattava demo](https://kassu11.github.io/platformer/test-v3.1)!
 - `Test v3.2` version [dokumentaatio](https://github.com/kassu11/platformer/tree/main/test-v3.2#readme) ja [pelattava demo](https://kassu11.github.io/platformer/test-v3.2)!
+- `Test v4.0` version [dokumentaatio](https://github.com/kassu11/platformer/tree/main/test-v4.0#readme) ja [pelattava demo](https://kassu11.github.io/platformer/test-v4.0)!
+- `Test v4.1` version [dokumentaatio](https://github.com/kassu11/platformer/tree/main/test-v4.1#readme) ja [pelattava demo](https://kassu11.github.io/platformer/test-v4.1)!
